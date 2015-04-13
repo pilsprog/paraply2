@@ -10,7 +10,6 @@ createIndex = (name) ->
   client.indices.exists
     'index': name
   .then(
-
     (exists) ->
       if not exists
         client.indices.create
@@ -38,3 +37,37 @@ client.ping
     process.exit(1))
 
 
+set = (event, callback) ->
+  client.create
+    'index': 'events'
+    'type': 'event'
+    'body': event
+  .then(
+    (result) ->
+      callback null, result
+    (error) ->
+      callback error)
+
+
+setGroup = (group, callback) ->
+  client.create
+    'index': 'groups'
+    'body': group
+  .then(
+    (result) ->
+      callback null, result
+    (error) ->
+      callback error)
+
+
+set
+  'title': "Woodihoo",
+  'date': new Date()
+  (err, res) ->
+    if err
+      console.log 'ERROR', err
+    console.log 'Result', res
+
+exports = module.exports =
+  'set': set
+  'setGroup': setGroup

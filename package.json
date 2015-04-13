@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/pilsprog/paraply2",
   "dependencies": {
-    "elasticsearch": "^4.0.2"
+    "elasticsearch": "^4.0.2",
+    "promise": "^7.0.0"
   }
 }
