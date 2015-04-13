@@ -1,4 +1,8 @@
-# Elasticsearch package and client object
+###
+Elasticsearch package and client object
+
+@author Snorre Davøen
+###
 elasticsearch = require 'elasticsearch'
 client = new elasticsearch.Client
   host: 'localhost:9200',
@@ -37,36 +41,28 @@ client.ping
     process.exit(1))
 
 
-set = (event, callback) ->
+set = (query) ->
   client.create
     'index': 'events'
     'type': 'event'
-    'body': event
+    'body': query.event
   .then(
     (result) ->
-      callback null, result
+      query.onSuccess result
     (error) ->
-      callback error)
+      query.onError error)
 
 
-setGroup = (group, callback) ->
+setGroup = (query) ->
   client.create
     'index': 'groups'
-    'body': group
+    'body': query.group
   .then(
     (result) ->
-      callback null, result
+      query.onSuccess result
     (error) ->
-      callback error)
+      query.onError error)
 
-
-set
-  'title': "Woodihoo",
-  'date': new Date()
-  (err, res) ->
-    if err
-      console.log 'ERROR', err
-    console.log 'Result', res
 
 exports = module.exports =
   'set': set
