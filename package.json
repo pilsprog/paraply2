@@ -16,11 +16,14 @@
   ],
   "authors": [
     "Torstein Thune <torstein@gmail.com> (http://thune.io/)",
-    "Snorre Davøen"
+    "Snorre Davøen  <snorremd@gmail.com> (http://snorre.io/)"
   ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/pilsprog/paraply2/issues"
   },
-  "homepage": "https://github.com/pilsprog/paraply2"
+  "homepage": "https://github.com/pilsprog/paraply2",
+  "dependencies": {
+    "elasticsearch": "^4.0.2"
+  }
 }
