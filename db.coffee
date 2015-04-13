@@ -1,4 +1,8 @@
-# Elasticsearch package and client object
+###
+Elasticsearch package and client object
+
+@author Snorre Davøen
+###
 elasticsearch = require 'elasticsearch'
 client = new elasticsearch.Client
   host: 'localhost:9200',
