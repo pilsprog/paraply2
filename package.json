@@ -1,0 +1,26 @@
+{
+  "name": "kompiler-paraply",
+  "version": "1.0.0",
+  "description": "Paraply is a simple event aggregator.",
+  "main": "index.coffee",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pilsprog/paraply2.git"
+  },
+  "keywords": [
+    "event",
+    "aggregator"
+  ],
+  "authors": [
+    "Torstein Thune <torstein@gmail.com> (http://thune.io/)",
+    "Snorre Davøen"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pilsprog/paraply2/issues"
+  },
+  "homepage": "https://github.com/pilsprog/paraply2"
+}
