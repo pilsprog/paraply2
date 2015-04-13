@@ -10,10 +10,10 @@ Lets the datahandler see what to do with any GET requests.
 http = require 'http'
 querystring = require 'querystring'
 colors = require 'colors'
-path = require 'path'
-fs = require 'fs'
-url = require 'url'
 port = process.argv[2] || 8888 # port to start paraply on
+
+frontend = require './frontend'
+api = require './api'
 
 #db = require './db'
 
@@ -37,47 +37,9 @@ postHandler = (req, res) ->
 		res.end('{ "went": "ok" }')
 	)
 
-frontendHandler = (request, response) ->
-	uri = url.parse(request.url).pathname
-	filename = path.join(process.cwd(), '/frontend/' + uri)
-	console.log "filename: #{filename}"
-	fs.exists(filename, (exists) ->
-
-		# We have a file that doesn't exist, respond with 404
-		if !exists
-			fs.readFile(path.join(process.cwd(), '/frontend/404.html'), (err, file) ->
-				response.writeHead(404)
-				response.write(file, 'binary')
-				response.end()	
-			)
-			return
-
-		# We have a directory, see if we have a static index file
-		if fs.statSync(filename).isDirectory()
-			if fs.existsSync(path.join(filename, 'index.html'))
-				filename = path.join(filename, 'index.html')
-			else
-				filename = path.join(process.cwd(), '/frontend/404.html')
-
-		fs.readFile(filename, "binary", (err, file) ->
-			#Something went wrong when reading file
-			if err
-				response.writeHead(500, {"Content-Type": "text/plain"})
-				response.write(err + "\n")
-				response.end()
-				return
-			
-
-			# Everything went well, return
-			response.writeHead(200)
-			response.write(file, "binary")
-			response.end()
-		)
-	)
-
 # Handle GET requests (e.g getting JSON)
 getHandler = (req, res) ->
-	frontendHandler(req, res)
+	frontend.handle(req, res)
 	# res.writeHead(200)
 	# res.write('Hello world!')
 	# res.end()
