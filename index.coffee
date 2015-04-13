@@ -12,8 +12,8 @@ querystring = require 'querystring'
 colors = require 'colors'
 port = process.argv[2] || 8888 # port to start paraply on
 
-frontend = require './frontend'
-api = require './api'
+frontend = require './app/frontend'
+api = require './app/api'
 
 #db = require './db'
 

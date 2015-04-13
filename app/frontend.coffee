@@ -10,13 +10,13 @@ url = require 'url'
 
 exports.handle = (request, response) ->
 	uri = url.parse(request.url).pathname
-	filename = path.join(process.cwd(), '/frontend/' + uri)
+	filename = path.join(process.cwd(), '/public/' + uri)
 	console.log "filename: #{filename}"
 	fs.exists(filename, (exists) ->
 
 		# We have a file that doesn't exist, respond with 404
 		if !exists
-			fs.readFile(path.join(process.cwd(), '/frontend/404.html'), (err, file) ->
+			fs.readFile(path.join(process.cwd(), '/public/404.html'), (err, file) ->
 				response.writeHead(404)
 				response.write(file, 'binary')
 				response.end()	
@@ -28,7 +28,7 @@ exports.handle = (request, response) ->
 			if fs.existsSync(path.join(filename, 'index.html'))
 				filename = path.join(filename, 'index.html')
 			else
-				filename = path.join(process.cwd(), '/frontend/404.html')
+				filename = path.join(process.cwd(), '/public/404.html')
 
 		fs.readFile(filename, "binary", (err, file) ->
 			#Something went wrong when reading file
