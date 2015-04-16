@@ -22,10 +22,12 @@ createIndex = (name) ->
           (body) ->
             console.log "Created #{name} index successfully"
           (error) ->
-            console.trace 'Failed to create event index')
+            console.error 'Failed to create event index')
+      else
+        console.log "Index already exists"
     
     (error) ->
-      console.trace error)
+      console.error error)
   
 
 # Make sure elastic search is running
@@ -37,8 +39,8 @@ client.ping
     createIndex('events')
     createIndex('groups')
   (error) ->
-    console.trace 'Elasticsearch cluster is down'
-    process.exit(1))
+    console.error 'Elasticsearch cluster is down'
+    throw new Error 'Elastic search cluster is down')
 
 
 set = (query) ->
@@ -55,7 +57,8 @@ set = (query) ->
 
 setGroup = (query) ->
   client.create
-    'index': 'groups'
+    'index': 'groups',
+    'type': 'group'
     'body': query.group
   .then(
     (result) ->
