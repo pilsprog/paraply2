@@ -30,7 +30,7 @@ At the moment only single events that are public can be fetched due to limitatio
 ###
 
 config = (require '../config.coffee').facebook
-unless config
+unless config?.appId and config?.secretKey
 	throw new Error('facebook module config missing')
 
 fb = require 'fb'
