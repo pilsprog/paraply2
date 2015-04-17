@@ -12,7 +12,7 @@ respond404 = (req, res) ->
 	fs.readFile(path.join(process.cwd(), '/public/404.html'), (err, file) ->
 		res.writeHead(404)
 		res.write(file, 'binary')
-		res.end()	
+		res.end()
 	)
 
 respond500 = (req, res) ->

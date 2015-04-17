@@ -5,7 +5,7 @@ At the moment only single events that are public can be fetched due to limitatio
 @example usage
 	facebook = require 'facebook'
 	if facebook.canHandle 'https://www.facebook.com/events/344493149083407/'
-		facebook.handle 
+		facebook.handle
 			url: 'https://www.facebook.com/events/344493149083407/'
 			onSuccess: (eventObj) ->
 				console.log eventObj
@@ -64,13 +64,13 @@ exports.canHandle = (url) ->
 # @option query [function] onError
 # @private
 _getEvent = (query) ->
-	unless query.eventId 
+	unless query.eventId
 		query.onError
 			error: new Error("No eventId supplied (facebook._getEvent)")
 			module: 'facebook'
 	else
 		fb.api query.eventId, {}, (res) ->
-			if not res or res.error 
+			if not res or res.error
 				query.onError
 					error: res.error
 					module: 'facebook'
@@ -89,7 +89,7 @@ _getEvent = (query) ->
 # @option query [function] onError
 exports.handle = (query) ->
 	eventId = _getEventId(query.url)
-	if @canHandle(query.url) and eventId 
+	if @canHandle(query.url) and eventId
 		query.eventId = eventId
 		_getEvent(query)
 
@@ -99,7 +99,7 @@ exports.handle = (query) ->
 			module: 'facebook'
 
 # if exports.canHandle 'https://www.facebook.com/events/344493149083407/'
-# 	exports.handle 
+# 	exports.handle
 # 		url: 'https://www.facebook.com/events/344493149083407/'
 # 		onSuccess: (eventObj) ->
 # 			console.log eventObj
