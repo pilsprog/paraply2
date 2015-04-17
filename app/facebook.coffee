@@ -34,6 +34,7 @@ unless config?.appId and config?.secretKey
 	throw new Error('facebook module config missing')
 
 fb = require 'fb'
+db = require 'db'
 
 fb.options
 	appId: config.appId
@@ -52,7 +53,7 @@ _getEventId = (url) ->
 # Check if this is a Facebook event url
 # @param [string] url
 # @return [boolean] canHandle
-exports.canHandle = (url) ->
+canHandle = (url) ->
 	if url.match(/facebook.com\//) and _getEventId(url)
 		return true
 	return false
@@ -75,12 +76,17 @@ _getEvent = (query) ->
 					error: res.error
 					module: 'facebook'
 			else
-				query.onSuccess
-					title: res.name
-					description: res.description
-					source: ''
-					date: new Date(res.start_time).getTime()
-					location: ''
+
+				db.set 
+					events: [
+						title: res.name
+						#description: res.description
+						source: query.url
+						date: new Date(res.start_time).getTime()
+						location: ''
+					]
+					onSuccess: query.onSuccess
+					onError: query.onError
 
 # Import and url
 # @param [object] query
@@ -89,14 +95,12 @@ _getEvent = (query) ->
 # @option query [function] onError
 exports.handle = (query) ->
 	eventId = _getEventId(query.url)
-	if @canHandle(query.url) and eventId
+	if canHandle(query.url) and eventId
 		query.eventId = eventId
 		_getEvent(query)
-
+		return true
 	else
-		query.onError
-			error: new Error("Could not get handle query url (#{query.url})")
-			module: 'facebook'
+		return false
 
 # if exports.canHandle 'https://www.facebook.com/events/344493149083407/'
 # 	exports.handle
