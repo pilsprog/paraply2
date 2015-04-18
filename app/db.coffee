@@ -63,7 +63,7 @@ client.ping
 .then(
 	(body) ->
 		_createIndex 'events'
-#		_createIndex 'groups'
+		_createIndex 'groups'
 	(error) ->
 		console.error 'Elasticsearch cluster is down'
 		throw new Error 'Elastic search cluster is down')
@@ -89,9 +89,11 @@ set = (query) ->
 		'body': bulkEvents
 	.then(
 		(result) ->
-			query.onSuccess "GREAT SUCCESS! ", result
+			query.onSuccess result
 		(error) ->
-			query.onError error)
+			query.onError
+				error: error
+				module 'db')
 
 
 # Add events to ElasticSearch event index
@@ -109,10 +111,33 @@ setGroup = (query) ->
 		(result) ->
 			query.onSuccess result
 		(error) ->
-			query.onError error)
+			query.onError
+				error: error
+				module 'db')
+
+
+# Get all upcoming events including recently started ones.
+# Returns events based on server time minus three hours for ongoing events.
+# @param [object] query
+# @option query [function] onSuccess
+# @option query [function] onError
+get = (query) ->
+	client.search
+		index: 'events'
+		body:
+			query: filtered: filter: range: date: gt: 'now-3h'
+			sort: date: order: "asc"
+	.then(
+		(events) ->
+			query.onSuccess events.hits.hits
+		(error) ->
+			query.onError
+				error: error
+				module 'db')
 
 
 # Export set and setGroup functions
 exports = module.exports =
 	'set': set
 	'setGroup': setGroup
+	'get': get
