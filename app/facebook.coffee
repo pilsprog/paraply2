@@ -84,12 +84,11 @@ _getEvent = (query) ->
 					error: res.error
 					module: 'facebook'
 			else
-
 				db.set 
 					events: [
 						id: @_createId(query.url)
 						title: res.name
-						#description: res.description
+						raw: res
 						source: query.url
 						date: new Date(res.start_time).getTime()
 						location: ''
