@@ -58,6 +58,14 @@ canHandle = (url) ->
 		return true
 	return false
 
+# Create a unique ID based on URL (should handle differing URL formats)
+# @param [string] url
+# @return [string] id
+# @private
+_createId: (url) ->
+	# The Facebook module only handles event ids anyway
+	return "facebook.com/events/#{_getEventId(url)}"
+
 # Get a facebook event
 # @param [int] eventId
 # @option query [int] eventId
@@ -79,6 +87,7 @@ _getEvent = (query) ->
 
 				db.set 
 					events: [
+						id: @_createId(query.url)
 						title: res.name
 						#description: res.description
 						source: query.url
