@@ -61,11 +61,11 @@ _canHandle = (url) ->
 
 # Create a unique ID based on URL (should handle differing URL formats)
 # @param [string] url
-# @return [string] id
+# @return [string] id modulename-type-id
 # @private
 _createId: (url) ->
 	# The Facebook module only handles event ids anyway
-	return "facebook.com/events/#{_getEventId(url)}"
+	return "facebook-event-#{_getEventId(url)}"
 
 # Get a facebook event
 # @param [int] eventId
