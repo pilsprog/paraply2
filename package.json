@@ -27,7 +27,8 @@
     "coffeekup": "^0.3.1",
     "colors": "^1.0.3",
     "elasticsearch": "^4.0.2",
-    "meetup-api": "^0.1.21",
-    "fb": "^0.7.0"
+    "eventbrite": "^0.1.6",
+    "fb": "^0.7.0",
+    "meetup-api": "^0.1.21"
   }
 }
