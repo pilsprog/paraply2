@@ -53,7 +53,8 @@ _getEventId = (url) ->
 # Check if this is a Facebook event url
 # @param [string] url
 # @return [boolean] canHandle
-canHandle = (url) ->
+# @private
+_canHandle = (url) ->
 	if url.match(/facebook.com\//) and _getEventId(url)
 		return true
 	return false
@@ -103,7 +104,7 @@ _getEvent = (query) ->
 # @option query [function] onError
 exports.handle = (query) ->
 	eventId = _getEventId(query.url)
-	if canHandle(query.url) and eventId 
+	if _canHandle(query.url) and eventId 
 		query.eventId = eventId
 		_getEvent(query)
 		return true
