@@ -1,21 +1,24 @@
 ###
-Module to fetch meetup events
+meetup is a module that handles fetching events and groups from Meetup.com.
+It handles single event URLs as well as group URLs. It only fetches open events.
+The Meetup.com API has some rate limiting, which might prevent the module from
+fetching.
+
+@example usage
+	meetup = require 'meetup'
+	
+	testEventHandle = () ->
+		meetup.handle
+			url: "http://www.meetup.com/NNUG-Bergen/events/221170619/"
+			onSuccess: (result) ->
+				console.log "RESULT", result
+			onError: (error) ->
+				console.log error.error
+	
+	testEventHandle()
 
 @author Snorre Magnus Davøen
-###
-
-###
-{
-	"title": "Event title",
-	"source": "http://url.com",
-	"date": [timestamp],
-	"location": {
-	"address": "Addressen til greien",
-	"name": "hvis det er et navn på stedet (f.eks Kvarteret/Landmark)",
-	"lon": 10
-	"lat": 10
-	}
-}
+@copyright Kompiler 2015
 ###
 
 muAPIKey = (require '../config.coffee').meetup
@@ -40,14 +43,20 @@ muGroupRegex = /// meetup\.com\/
 # @param [string] id
 # @param [function] onError
 # @param [function] onSuccess
-getEvents = (eventQuery) ->
-	mu.getEvents
-		event_id: eventQuery.ids
+# @private
+_getEvents = (eventQuery) ->
+	if eventQuery.ids?
+		muQuery = event_id: eventQuery.ids
+	if eventQuery.name?
+		muQuery = group_urlname: eventQuery.name
+
+	mu.getEvents(
+		muQuery
 		(error, events) ->
 			if error
 				eventQuery.onError error
 			else
-				eventQuery.onSuccess events.results
+				eventQuery.onSuccess events.results)
 
 
 # Get Meetup group by group 'urlname'
@@ -55,9 +64,9 @@ getEvents = (eventQuery) ->
 # @param [string] name
 # @param [function] onError
 # @param [function] onSuccess
-getGroup = (groupQuery) ->
+_getGroups = (groupQuery) ->
 	mu.getGroups
-		group_urlname: groupQuery.name
+		group_urlname: groupQuery.names
 		(error, groups) ->
 			if error
 				groupQuery.onError error
@@ -67,7 +76,8 @@ getGroup = (groupQuery) ->
 
 # Parse a Meetup event JSON object
 # @param [object] event
-parseEvent = (event) ->
+_parseEvent = (event) ->
+	id: "meetup-event-#{event.id}"
 	title: event.name
 	source: event.event_url
 	date: new Date(event.time)
@@ -80,8 +90,10 @@ parseEvent = (event) ->
 
 # Parse a Meetup group JSON object
 # @param [object] group
-parseGroup = (group) ->
+_parseGroup = (group) ->
+	id: "meetup-group-#{group.id}"
 	source: group.link
+	raw: group
 
 
 # Handle a Meetup event add query
@@ -89,18 +101,42 @@ parseGroup = (group) ->
 # @option query [object] event
 # @option query [function] onSuccess
 # @option query [function] onError
-handleEvent = (query) ->
+# @private
+_handleEvent = (query) ->
 	id = (muRegex.exec query.url)[1]
-	getEvents
+	_getEvents
 		ids: [id]
 		onError: (error) ->
 			query.onError
 				error: error
 				module: 'meetup'
 		onSuccess: (muEvents) ->
-			event = parseEvent muEvents[0]
+			event = _parseEvent muEvents[0]
 			db.set
 				events: [event]
+				onSuccess: query.onSuccess
+				onError: query.onError
+
+
+# Handle Meetup group events
+# @param [object] query
+# @option query [object] event
+# @option query [function] onSuccess
+# @option query [function] onError
+# @private
+_handleGroupEvents = (query) ->
+	_getEvents
+		name: query.name
+		onError: (error) ->
+			query.onError
+				error: error
+				module: 'meetup'
+		onSuccess: (muEvents) ->
+			events = []
+			for event in muEvents
+				events.push _parseEvent event
+			db.set
+				events: events
 				onSuccess: query.onSuccess
 				onError: query.onError
 
@@ -110,26 +146,22 @@ handleEvent = (query) ->
 # @option query [object] event
 # @option query [function] onSuccess
 # @option query [function] onError
-handleGroup = (query) ->
+_handleGroup = (query) ->
 	name = (muGroupRegex.exec query.url)[1]
-	getGroup
-		name: name
+	_getGroups
+		names: [name]
 		onError: (error) ->
 			query.onError
 				error: error
 				module: 'meetup'
 		onSuccess: (muGroup) ->
-			group = parseGroup muGroup
+			group = _parseGroup muGroup
+			query.name = group.raw.urlname
 			db.setGroup
 				group: group
-				onSuccess: query.onSuccess
+				onSuccess: () -> _handleGroupEvents query
 				onError: query.onError
 
-
-# Check if this is a Meetup url
-# @param [string] url
-#exports.canHandle = (url) ->
-#  return url.match(muRegex)? or url.match(muGroupRegex)?
 
 # Import and url
 # @param [object] query
@@ -138,13 +170,11 @@ handleGroup = (query) ->
 # @option query [function] onError
 exports.handle = (query) ->
 	unless query.url.match(muRegex)? or query.url.match(muGroupRegex)?
-		console.log "is false"
 		return false
 	else
 		isEvent = query.url.match(muRegex)?
 		if isEvent
-			console.log "Is event true"
-			handleEvent query
+			_handleEvent query
 		else
-			handleGroup query
+			_handleGroup query
 		return true
