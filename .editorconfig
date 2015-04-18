@@ -1,0 +1,4 @@
+# Tab indentation (no size specified)
+[*.coffee]
+indent_style = tab
+indent_size = 4
