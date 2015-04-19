@@ -5,3 +5,7 @@ exports.facebook =
 
 # Meetup config
 exports.meetup = null # API key as string
+
+#Eventbrite config
+exports.eventbrite =
+	appKey: null
