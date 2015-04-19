@@ -81,6 +81,7 @@ _parseEvent = (event) ->
 	title: event.name
 	source: event.event_url
 	date: new Date(event.time)
+	raw: event
 	location:
 		address: event.venue.address
 		name: event.venue.name
