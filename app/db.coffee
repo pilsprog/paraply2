@@ -128,12 +128,35 @@ get = (query) ->
 			query: filtered: filter: range: date: gt: 'now-3h'
 			sort: date: order: "asc"
 	.then(
-		(events) ->
-			query.onSuccess events.hits.hits
+		(esEvents) ->
+			events = []
+			for event in esEvents.hits.hits
+				events.push event._source
+			query.onSuccess events
 		(error) ->
 			query.onError
 				error: error
 				module 'db')
+
+
+# Get all groups from group index
+# @param [object] query
+# @option query [function] onSuccess
+# @option query [function] onError
+getGroups = (query) ->
+	client.search
+		index: 'groups'
+		body: query: match_all: {}
+	.then(
+		(esGroups) ->
+			groups = []
+			for group in esGroups.hits.hits
+				groups.push group._source
+			query.onSuccess groups
+		(error) ->
+			query.onError
+				error: error
+				module: 'db')
 
 
 # Export set and setGroup functions
@@ -141,3 +164,4 @@ exports = module.exports =
 	'set': set
 	'setGroup': setGroup
 	'get': get
+	'getGroups': getGroups
