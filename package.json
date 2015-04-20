@@ -24,11 +24,11 @@
   },
   "homepage": "https://github.com/pilsprog/paraply2",
   "dependencies": {
-    "coffeekup": "^0.3.1",
     "colors": "^1.0.3",
     "elasticsearch": "^4.0.2",
     "eventbrite": "^0.1.6",
     "fb": "^0.7.0",
+    "jade": "^1.9.2",
     "meetup-api": "^0.1.21"
   }
 }

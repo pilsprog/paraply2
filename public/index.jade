@@ -1,0 +1,36 @@
+doctype html
+html
+	head
+		title Paraply: IT-arrangementer i Bergen
+		link(rel='stylesheet', href='css/main.css', type='text/css')
+	body
+		header.clearfix
+			.wrapper
+				img#logo('src=img/kompiler.png')
+				h1 IT-arrangementer i Bergen
+				form(action='/')
+					input.url(type='text', name='url' placeholder='Legg til IT-arrangement med URL')
+					button(type='submit') Add
+					label(for='url') fra facebook, meetup eller eventbrite
+		.wrapper
+			each group in events
+				h2.dateHeader= group.dateHeader
+				ul.events
+					each event in group.events
+						li.event
+							.eventTime #{getHourMinutes(event.date)}
+							.eventTitle #{event.title}
+							.eventSubtitle #{event.organiser} @ #{event.location.name} (#{event.location.address})
+
+		footer
+			.wrapper
+				img#logoFooter('src=img/kompiler-grey.png')
+				nav#footer
+					ul
+						li
+							a(href='https://github.com/pilsprog') github
+						li
+							a(href='http://kompiler.no') blog
+
+					div.right IT-Bergen under én 
+						a(href='https://github.com/pilsprog/paraply2') Paraply

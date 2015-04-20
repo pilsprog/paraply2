@@ -7,6 +7,7 @@ querystring = require 'querystring'
 path = require 'path'
 fs = require 'fs'
 url = require 'url'
+jade = require 'jade'
 
 respond404 = (req, res) ->
 	fs.readFile(path.join(process.cwd(), '/public/404.html'), (err, file) ->
@@ -15,9 +16,9 @@ respond404 = (req, res) ->
 		res.end()
 	)
 
-respond500 = (req, res) ->
+respond500 = (req, res, err) ->
 	res.writeHead(500, {"Content-Type": "text/plain"})
-	res.write(err + "\n")
+	res.write('HTTP 500, Paraplyen lekker.')
 	res.end()
 
 exports.handle = (request, response) ->
@@ -34,21 +35,152 @@ exports.handle = (request, response) ->
 
 		# We have a directory, see if we have a static index file
 		if fs.statSync(filename).isDirectory()
-			if fs.existsSync(path.join(filename, 'index.html'))
-				filename = path.join(filename, 'index.html')
+			if fs.existsSync(path.join(filename, 'index.jade'))
+				filename = path.join(filename, 'index.jade')
 			else
 				respond404()
 				return
 
-		fs.readFile(filename, "binary", (err, file) ->
-			#Something went wrong when reading file
-			if err
-				respond500(request, response)
-				return
-			
-			# Everything went well, return
-			response.writeHead(200)
-			response.write(file, "binary")
-			response.end()
-		)
+		if filename.indexOf('.jade') isnt -1
+			try 
+				html = jade.renderFile filename, 
+					pretty: true
+					compileDebug: true
+					getHourMinutes: (timestamp) ->
+						date = new Date(timestamp)
+						return "#{('0'+date.getHours()).slice(-2)}:#{('0' + date.getMinutes()).slice(-2)}"
+					events: [
+						{
+							dateHeader: 'Søndag, 19.03.2015'
+							events: [
+								{
+									title: 'Hello world'
+									source: 'http://test.test'
+									date: new Date().getTime()
+									organiser: 'Some group'
+									location:
+										name: 'Det Akademiske Kvarter'
+										address: 'Strømgaten 6, Bergen, Norge'
+
+								}
+								{
+									title: 'Hello world'
+									source: 'http://test.test'
+									date: new Date().getTime()
+									organiser: 'Some group'
+									location:
+										name: 'Det Akademiske Kvarter'
+										address: 'Strømgaten 6, Bergen, Norge'
+
+								}
+								{
+									title: 'Hello world'
+									source: 'http://test.test'
+									date: new Date().getTime()
+									organiser: 'Some group'
+									location:
+										name: 'Det Akademiske Kvarter'
+										address: 'Strømgaten 6, Bergen, Norge'
+
+								}
+								{
+									title: 'Hello world'
+									source: 'http://test.test'
+									date: new Date().getTime()
+									organiser: 'Some group'
+									location:
+										name: 'Det Akademiske Kvarter'
+										address: 'Strømgaten 6, Bergen, Norge'
+
+								}
+								{
+									title: 'Hello world'
+									source: 'http://test.test'
+									date: new Date().getTime()
+									organiser: 'Some group'
+									location:
+										name: 'Det Akademiske Kvarter'
+										address: 'Strømgaten 6, Bergen, Norge'
+
+								}
+							]
+						}
+						{
+							dateHeader: 'Søndag, 19.03.2015'
+							events: [
+								{
+									title: 'Hello world'
+									source: 'http://test.test'
+									date: new Date().getTime()
+									organiser: 'Some group'
+									location:
+										name: 'Det Akademiske Kvarter'
+										address: 'Strømgaten 6, Bergen, Norge'
+
+								}
+								{
+									title: 'Hello world'
+									source: 'http://test.test'
+									date: new Date().getTime()
+									organiser: 'Some group'
+									location:
+										name: 'Det Akademiske Kvarter'
+										address: 'Strømgaten 6, Bergen, Norge'
+
+								}
+								{
+									title: 'Hello world'
+									source: 'http://test.test'
+									date: new Date().getTime()
+									organiser: 'Some group'
+									location:
+										name: 'Det Akademiske Kvarter'
+										address: 'Strømgaten 6, Bergen, Norge'
+
+								}
+								{
+									title: 'Hello world'
+									source: 'http://test.test'
+									date: new Date().getTime()
+									organiser: 'Some group'
+									location:
+										name: 'Det Akademiske Kvarter'
+										address: 'Strømgaten 6, Bergen, Norge'
+
+								}
+								{
+									title: 'Hello world'
+									source: 'http://test.test'
+									date: new Date().getTime()
+									organiser: 'Some group'
+									location:
+										name: 'Det Akademiske Kvarter'
+										address: 'Strømgaten 6, Bergen, Norge'
+
+								}
+							]
+						}
+					]
+
+				response.writeHead(200)
+				response.write(html, "binary")
+				response.end()
+
+				
+			catch e 
+				# console.log e
+				respond500(request, response, e)
+
+		else
+			fs.readFile(filename, "binary", (err, file) ->
+				#Something went wrong when reading file
+				if err
+					respond500(request, response)
+					return
+				
+				# Everything went well, return
+				response.writeHead(200)
+				response.write(file, "binary")
+				response.end()
+			)
 	)
