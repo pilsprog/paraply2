@@ -1,0 +1,150 @@
+body {
+	margin: 0;
+	padding-bottom: 50px;
+	font-family: Helvetica Neue, Helvetica, Arial, Sans-serif;
+	position: relative;
+}
+header {
+	padding: 25px;
+	background: #eee;
+	border-bottom: 1px solid #ccc;
+}
+
+header img {
+	float:left;
+	margin-right: 15px;
+}
+
+header h1 {
+	font-size: 18px;
+	text-transform: uppercase;
+	font-weight: 500;
+	line-height: 25px;
+	float:left;
+	margin: 0;
+}
+
+header form {
+	float: right;
+}
+
+header .url {
+	width: 210px;
+	padding: 0 10px;
+	height: 30px;
+	line-height: 30px;
+	border: 1px solid #c9c9c9;
+	margin-right: 5px;
+}
+
+header button {
+	float:right;
+	width: 32px;
+	height: 32px;
+	background: #333;
+	color: white;
+	content: '+';
+	border: 0;
+	text-indent: 9999px;
+}
+
+header label {
+	display: block;
+	font-size: 13px;
+	color: #999;
+	margin-top: 5px;
+}
+
+.wrapper {
+	width: 800px;
+	margin: 0 auto;
+}
+
+.dateHeader {
+	font-size: 20px;
+	text-transform: uppercase;
+	color: #3F3F3F;
+	font-weight: 500;
+	margin: 25px 0;
+}
+
+.events {
+	list-style:none;
+	margin:0;
+	padding: 0;
+	color: #3F3F3F;
+	border-bottom: 1px solid #eee;
+}
+
+.events li {
+	margin-bottom: 50px;
+}
+
+.eventTime {
+	width: 98px;
+	height: 50px;
+	line-height: 50px;
+	text-align:center;
+	font-size: 25px;
+	float:left;
+	margin-right: 15px;
+	background: #DDDDDD;
+}
+
+.eventTitle {
+	font-size: 30px;
+}
+
+.eventSubtitle {
+	font-size: 15px;
+}
+
+.right {
+	float: right;
+}
+
+footer {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 15px;
+	background: #3F3F3F;
+	color: #797979;
+	font-size: 14px;
+}
+
+footer a {
+	text-decoration: none;
+	color: #7f7f7f;
+	font-weight: 500;
+}
+
+footer img {
+	float:left;
+	margin-right: 15px;
+}
+
+footer ul {
+	list-style: none;
+	padding: 0;
+	margin: 0;
+	float:left;
+}
+
+footer li {
+	display: inline-block;
+	margin-right: 10px;
+}
+
+/* new clearfix */
+.clearfix:after {
+	visibility: hidden;
+	display: block;
+	font-size: 0;
+	content: " ";
+	clear: both;
+	height: 0;
+	}
+* html .clearfix             { zoom: 1; } /* IE6 */
+*:first-child+html .clearfix { zoom: 1; } /* IE7 */
