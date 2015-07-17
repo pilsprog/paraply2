@@ -34,7 +34,7 @@ unless config?.appId and config?.secretKey
 	throw new Error('facebook module config missing')
 
 fb = require 'fb'
-db = require 'db'
+db = require './db'
 
 fb.options
 	appId: config.appId
@@ -63,7 +63,7 @@ _canHandle = (url) ->
 # @param [string] url
 # @return [string] id modulename-type-id
 # @private
-_createId: (url) ->
+_createId = (url) ->
 	# The Facebook module only handles event ids anyway
 	return "facebook-event-#{_getEventId(url)}"
 
@@ -87,7 +87,7 @@ _getEvent = (query) ->
 			else
 				db.set 
 					events: [
-						id: @_createId(query.url)
+						id: _createId(query.url)
 						title: res.name
 						raw: res
 						source: query.url
