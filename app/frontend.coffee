@@ -8,6 +8,7 @@ path = require 'path'
 fs = require 'fs'
 url = require 'url'
 jade = require 'jade'
+db = require './db.coffee'
 
 respond404 = (req, res) ->
 	fs.readFile(path.join(process.cwd(), '/public/404.html'), (err, file) ->
@@ -25,6 +26,7 @@ exports.handle = (request, response) ->
 	uri = url.parse(request.url).pathname
 	filename = path.join(process.cwd(), '/public/' + uri)
 	console.log "filename: #{filename}"
+
 	fs.exists(filename, (exists) ->
 
 		# We have a file that doesn't exist, respond with 404
@@ -42,130 +44,133 @@ exports.handle = (request, response) ->
 				return
 
 		if filename.indexOf('.jade') isnt -1
-			try 
-				html = jade.renderFile filename, 
-					pretty: true
-					compileDebug: true
-					getHourMinutes: (timestamp) ->
-						date = new Date(timestamp)
-						return "#{('0'+date.getHours()).slice(-2)}:#{('0' + date.getMinutes()).slice(-2)}"
-					events: [
-						{
-							dateHeader: 'Søndag, 19.03.2015'
-							events: [
-								{
-									title: 'Hello world'
-									source: 'http://test.test'
-									date: new Date().getTime()
-									organiser: 'Some group'
-									location:
-										name: 'Det Akademiske Kvarter'
-										address: 'Strømgaten 6, Bergen, Norge'
+			try
+				onSuccess = (data) ->
+					html = jade.renderFile filename, 
+						pretty: true
+						compileDebug: true
+						getHourMinutes: (timestamp) ->
+							date = new Date(timestamp)
+							return "#{('0'+date.getHours()).slice(-2)}:#{('0' + date.getMinutes()).slice(-2)}"
+						events: [
+							{
+								dateHeader: 'Søndag, 19.03.2015'
+								events: [
+									{
+										title: 'Hello world'
+										source: 'http://test.test'
+										date: new Date().getTime()
+										organiser: 'Some group'
+										location:
+											name: 'Det Akademiske Kvarter'
+											address: 'Strømgaten 6, Bergen, Norge'
 
-								}
-								{
-									title: 'Hello world'
-									source: 'http://test.test'
-									date: new Date().getTime()
-									organiser: 'Some group'
-									location:
-										name: 'Det Akademiske Kvarter'
-										address: 'Strømgaten 6, Bergen, Norge'
+									}
+									{
+										title: 'Hello world'
+										source: 'http://test.test'
+										date: new Date().getTime()
+										organiser: 'Some group'
+										location:
+											name: 'Det Akademiske Kvarter'
+											address: 'Strømgaten 6, Bergen, Norge'
 
-								}
-								{
-									title: 'Hello world'
-									source: 'http://test.test'
-									date: new Date().getTime()
-									organiser: 'Some group'
-									location:
-										name: 'Det Akademiske Kvarter'
-										address: 'Strømgaten 6, Bergen, Norge'
+									}
+									{
+										title: 'Hello world'
+										source: 'http://test.test'
+										date: new Date().getTime()
+										organiser: 'Some group'
+										location:
+											name: 'Det Akademiske Kvarter'
+											address: 'Strømgaten 6, Bergen, Norge'
 
-								}
-								{
-									title: 'Hello world'
-									source: 'http://test.test'
-									date: new Date().getTime()
-									organiser: 'Some group'
-									location:
-										name: 'Det Akademiske Kvarter'
-										address: 'Strømgaten 6, Bergen, Norge'
+									}
+									{
+										title: 'Hello world'
+										source: 'http://test.test'
+										date: new Date().getTime()
+										organiser: 'Some group'
+										location:
+											name: 'Det Akademiske Kvarter'
+											address: 'Strømgaten 6, Bergen, Norge'
 
-								}
-								{
-									title: 'Hello world'
-									source: 'http://test.test'
-									date: new Date().getTime()
-									organiser: 'Some group'
-									location:
-										name: 'Det Akademiske Kvarter'
-										address: 'Strømgaten 6, Bergen, Norge'
+									}
+									{
+										title: 'Hello world'
+										source: 'http://test.test'
+										date: new Date().getTime()
+										organiser: 'Some group'
+										location:
+											name: 'Det Akademiske Kvarter'
+											address: 'Strømgaten 6, Bergen, Norge'
 
-								}
-							]
-						}
-						{
-							dateHeader: 'Søndag, 19.03.2015'
-							events: [
-								{
-									title: 'Hello world'
-									source: 'http://test.test'
-									date: new Date().getTime()
-									organiser: 'Some group'
-									location:
-										name: 'Det Akademiske Kvarter'
-										address: 'Strømgaten 6, Bergen, Norge'
+									}
+								]
+							}
+							{
+								dateHeader: 'Søndag, 19.03.2015'
+								events: [
+									{
+										title: 'Hello world'
+										source: 'http://test.test'
+										date: new Date().getTime()
+										organiser: 'Some group'
+										location:
+											name: 'Det Akademiske Kvarter'
+											address: 'Strømgaten 6, Bergen, Norge'
 
-								}
-								{
-									title: 'Hello world'
-									source: 'http://test.test'
-									date: new Date().getTime()
-									organiser: 'Some group'
-									location:
-										name: 'Det Akademiske Kvarter'
-										address: 'Strømgaten 6, Bergen, Norge'
+									}
+									{
+										title: 'Hello world'
+										source: 'http://test.test'
+										date: new Date().getTime()
+										organiser: 'Some group'
+										location:
+											name: 'Det Akademiske Kvarter'
+											address: 'Strømgaten 6, Bergen, Norge'
 
-								}
-								{
-									title: 'Hello world'
-									source: 'http://test.test'
-									date: new Date().getTime()
-									organiser: 'Some group'
-									location:
-										name: 'Det Akademiske Kvarter'
-										address: 'Strømgaten 6, Bergen, Norge'
+									}
+									{
+										title: 'Hello world'
+										source: 'http://test.test'
+										date: new Date().getTime()
+										organiser: 'Some group'
+										location:
+											name: 'Det Akademiske Kvarter'
+											address: 'Strømgaten 6, Bergen, Norge'
 
-								}
-								{
-									title: 'Hello world'
-									source: 'http://test.test'
-									date: new Date().getTime()
-									organiser: 'Some group'
-									location:
-										name: 'Det Akademiske Kvarter'
-										address: 'Strømgaten 6, Bergen, Norge'
+									}
+									{
+										title: 'Hello world'
+										source: 'http://test.test'
+										date: new Date().getTime()
+										organiser: 'Some group'
+										location:
+											name: 'Det Akademiske Kvarter'
+											address: 'Strømgaten 6, Bergen, Norge'
 
-								}
-								{
-									title: 'Hello world'
-									source: 'http://test.test'
-									date: new Date().getTime()
-									organiser: 'Some group'
-									location:
-										name: 'Det Akademiske Kvarter'
-										address: 'Strømgaten 6, Bergen, Norge'
+									}
+									{
+										title: 'Hello world'
+										source: 'http://test.test'
+										date: new Date().getTime()
+										organiser: 'Some group'
+										location:
+											name: 'Det Akademiske Kvarter'
+											address: 'Strømgaten 6, Bergen, Norge'
 
-								}
-							]
-						}
-					]
+									}
+								]
+							}
+						]
 
-				response.writeHead(200)
-				response.write(html, "binary")
-				response.end()
+					response.writeHead(200)
+					response.write(html, "binary")
+					response.end()
 
+
+				db.get({ onSuccess: onSuccess, onError: (error) -> console.log 'fuck!', error})
 				
 			catch e 
 				# console.log e
