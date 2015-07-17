@@ -12,14 +12,16 @@ eventbrite = (require 'eventbrite')({app_key:config.appKey})
 # @param [string] url
 # @return id or undefined
 _getEventId = (url) ->
-	id = (new RegExp(/eventbrite\.com\/e\/[A-Za-z0-9-]*-(\d+)+/g)).exec(url)?[1] or= undefined
+	id = (new RegExp(/eventbrite\.com\/e\/[A-Za-z0-9-]*-(\d+)+/g)).exec(url)?[1] 
+	id ?= undefined
 	return id
 
 # Get ID for an eventbrite organiser
 # @param [string] url
 # @return id or undefined
 _getOrganiserId = (url) ->
-	id = (new RegExp(/eventbrite\.com\/o\/[A-Za-z0-9-]*-(\d+)+/g)).exec(url)?[1] or= undefined
+	id = (new RegExp(/eventbrite\.com\/o\/[A-Za-z0-9-]*-(\d+)+/g)).exec(url)?[1] 
+	id ?= undefined
 	return id
 
 # Get events for an organiser
@@ -55,9 +57,9 @@ _getOrganiserEvents = (query) ->
 						title: event.title
 						location:
 							address: "#{event.venue.address}, #{event.venue.city}, #{event.venue.country}"
-								name: event.venue.name
-								lon: event.venue.longitude
-								lat: event.venue.latitude
+							name: event.venue.name
+							lon: event.venue.longitude
+							lat: event.venue.latitude
 
 			db.set 
 				events: events
@@ -73,6 +75,7 @@ _getOrganiserEvents = (query) ->
 # @option query [function] onError
 # @private
 _getEvent = (query) ->
+	console.log 'eventbrite._getEvent'
 	eventbrite.event_get({id: query.eventId}, (err, data) ->
 		db.set 
 			events: [
@@ -91,12 +94,22 @@ _getEvent = (query) ->
 	)
 
 exports.handle = (query) ->
-	if id = query.eventId = @_getEventId(query.url)
+	console.log 'eventbrite.handle'
+	eventId = _getEventId(query.url)
+	console.log eventId
+	organiserId = _getOrganiserId(query.url)
+
+	if eventId
+		console.log "eventId: #{eventId}"
+		query.eventId = eventId
 		_getEvent query
-		return true
-	else if query.organiserId = @_getOrganiserId(query.url)
+		#return true
+	
+	else if organiserId
+		console.log "organiserId: #{eventId}"
+		query.organiserId = organiserId
 		_getOrganiserId query
-		return true
+		#return true
 
 	return false 
 
