@@ -113,7 +113,7 @@ setGroup = (query) ->
 		(error) ->
 			query.onError
 				error: error
-				module 'db')
+				module: 'db')
 
 
 # Get all upcoming events including recently started ones.
@@ -136,7 +136,7 @@ get = (query) ->
 		(error) ->
 			query.onError
 				error: error
-				module 'db')
+				module: 'db')
 
 
 # Get all groups from group index
