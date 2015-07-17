@@ -71,7 +71,23 @@ exports.handle = (request, response) ->
 					response.end()
 
 
-				db.get({ onSuccess: onSuccess, onError: (error) -> console.log 'fuck!', error})
+				db.get
+					onSuccess: onSuccess
+					onError: (error) -> 
+						console.log '\n\n\n\n'
+						console.log JSON.stringify error, false, '\t'
+						console.log '\n\n\n'
+						html = jade.renderFile filename, 
+							pretty: true
+							compileDebug: true
+							getHourMinutes: (timestamp) ->
+								date = new Date(timestamp)
+								return "#{('0'+date.getHours()).slice(-2)}:#{('0' + date.getMinutes()).slice(-2)}"
+							events: []
+
+						response.writeHead(200)
+						response.write(html, "binary")
+						response.end()
 				
 			catch e 
 				# console.log e
