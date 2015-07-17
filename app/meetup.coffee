@@ -30,12 +30,12 @@ mu = (require 'meetup-api') key: muAPIKey
 db = require './db'
 
 muRegex = /// meetup\.com\/      # Match meetup.com/
-				[A-Za-z09\-]*\/   # Match Letter-109-MeetupGroup/
+				[A-Za-z0-9\-]*\/   # Match Letter-109-MeetupGroup/
 				events\/          # Match events/
 				(\d{9,})\/? ///   # Match 123456789 (least 9 digits, optional /)
 
 muGroupRegex = /// meetup\.com\/
-					([A-Za-z09\-]*)\/? ///
+					([A-Za-z0-9\-]*)\/? ///
 
 
 # Get events by its meetup id
@@ -56,6 +56,7 @@ _getEvents = (eventQuery) ->
 			if error
 				eventQuery.onError error
 			else
+				console.log 'WE HAVE FEEDBACK\n', events
 				eventQuery.onSuccess events.results)
 
 
@@ -71,6 +72,7 @@ _getGroups = (groupQuery) ->
 			if error
 				groupQuery.onError error
 			else
+				console.log '\n\n\nWE HAVE A GROUP\n', groups, '\n\n\n'
 				groupQuery.onSuccess groups.results[0]
 
 
