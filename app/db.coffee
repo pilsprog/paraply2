@@ -6,10 +6,7 @@ client.
 @author Snorre Davøen
 ###
 elasticsearch = require 'elasticsearch'
-client = new elasticsearch.Client
-	host: 'localhost:9200'
-	log: 'trace'
-	apiVersion: '1.5'
+client = new elasticsearch.Client (require '../config').elasticsearch
 
 
 # Add ID mapping to index
