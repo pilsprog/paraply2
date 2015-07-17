@@ -83,10 +83,10 @@ _parseEvent = (event) ->
 	date: new Date(event.time)
 	raw: event
 	location:
-		address: event.venue.address
-		name: event.venue.name
-		lon: event.venue.lon
-		lat: event.venue.lat
+		address: event?.venue?.address
+		name: event?.venue?.name
+		lon: event?.venue?.lon
+		lat: event?.venue?.lat
 
 
 # Parse a Meetup group JSON object
