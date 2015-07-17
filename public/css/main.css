@@ -80,6 +80,19 @@ header label {
 	margin-bottom: 50px;
 }
 
+.events a {
+	color: #A51C27;
+	text-decoration: none;
+}
+
+.events a:visited {
+	color: #795457;
+}
+
+.events a:hover {
+	color: #DF515C;
+}
+
 .eventTime {
 	width: 98px;
 	height: 50px;

@@ -19,8 +19,16 @@ html
 					each event in group.events
 						li.event
 							.eventTime #{getHourMinutes(event.date)}
-							.eventTitle #{event.title}
-							.eventSubtitle #{event.organiser} @ #{event.location.name} (#{event.location.address})
+							.eventTitle 
+								a(href="#{event.source}") #{event.title}
+
+							.eventSubtitle
+								if event.organiser
+									| #{event.organiser} 
+								if event.location.name
+									| @ #{event.location.name} 
+								if event.location.address
+									| (#{event.location.address})
 
 		footer
 			.wrapper
