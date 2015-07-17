@@ -93,7 +93,7 @@ set = (query) ->
 		(error) ->
 			query.onError
 				error: error
-				module 'db')
+				module: 'db')
 
 
 # Add events to ElasticSearch event index
