@@ -48,7 +48,7 @@ _getOrganiserEvents = (query) ->
 			events = []
 
 			for event in res.events
-				date = new Date(event.start_date).getTime()
+				date = new Date(event.start_date)
 				if date < now
 					events.push
 						id: "eventbrite-id-#{_getEventId(event.url)}"
