@@ -91,8 +91,13 @@ _getEvent = (query) ->
 						title: res.name
 						raw: res
 						source: query.url
-						date: new Date(res.start_time).getTime()
-						location: ''
+						date: new Date(res.start_time)
+						location: {
+							address: ''
+							name: ''
+							lon: 0
+							lat: 0
+						}
 					]
 					onSuccess: query.onSuccess
 					onError: query.onError
