@@ -1,6 +1,6 @@
 {
   "name": "kompiler-paraply",
-  "version": "1.0.0",
+  "version": "0.9.0",
   "description": "Paraply is a simple event aggregator.",
   "main": "index.coffee",
   "scripts": {
