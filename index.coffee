@@ -15,7 +15,33 @@ port = process.argv[2] || 8888 # port to start paraply on
 frontend = require './app/frontend'
 api = require './app/api'
 
+modules = {}
+modules.meetup = require './app/meetup'
+modules.eventbrite = require './app/eventbrite'
+modules.facebook = require './app/facebook'
+
 #db = require './db'
+
+handleUrl = (url, req, res) ->
+	# check if url is a valid url
+	console.log 'handleUrl'
+
+	queryObj =
+		url: url
+		onSuccess: -> 
+			res.writeHead(200)
+			res.end('Thank you!')
+		onError: ->
+			res.writeHead(400)
+			res.end("Paraplyen klarte ikke å håndtere #{url}. Kun Facebook-arrangementer, Meetup-grupper og -arrangementer og Eventbrite-organiserere og -arrangementer støttes.")
+	console.log frontend
+	
+	for module, val of modules
+		console.log module
+		console.log val
+
+		break if val.handle?(queryObj)
+
 
 # Handle post requests (e.g urls for adding events)
 postHandler = (req, res) ->
@@ -28,13 +54,16 @@ postHandler = (req, res) ->
 		console.error('got a error', error)
 	)
 
-	req.addListener('end', (chunk) ->
+	req.addListener('end', (chunk) =>
 		req.body += chunk if chunk
 
-		url = decodeURIComponent(req.body)
+		console.log req.body
 
-		res.writeHead(200)
-		res.end('{ "went": "ok" }')
+		url = decodeURIComponent(req.body).replace('url=', '')
+
+
+		console.log url
+		handleUrl(url, req, res)
 	)
 
 # Handle GET requests (e.g getting JSON)
