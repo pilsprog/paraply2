@@ -9,6 +9,9 @@ fs = require 'fs'
 url = require 'url'
 jade = require 'jade'
 db = require './db.coffee'
+_ = require 'lodash'
+moment = require 'moment'
+moment.locale 'nb'
 
 respond404 = (req, res) ->
 	fs.readFile(path.join(process.cwd(), '/public/404.html'), (err, file) ->
@@ -46,124 +49,22 @@ exports.handle = (request, response) ->
 		if filename.indexOf('.jade') isnt -1
 			try
 				onSuccess = (data) ->
+					console.log data
+					events = _.groupBy data, (elem) ->
+						return moment(elem.date).format('YYYY-MM-DD')
+
+					eventData = []
+					for key,val of events
+						eventData.push { dateHeader: moment(key).format('dddd, Do MMMM, YYYY'), events: val}
+
+					console.log eventData
 					html = jade.renderFile filename, 
 						pretty: true
 						compileDebug: true
 						getHourMinutes: (timestamp) ->
 							date = new Date(timestamp)
 							return "#{('0'+date.getHours()).slice(-2)}:#{('0' + date.getMinutes()).slice(-2)}"
-						events: [
-							{
-								dateHeader: 'Søndag, 19.03.2015'
-								events: [
-									{
-										title: 'Hello world'
-										source: 'http://test.test'
-										date: new Date().getTime()
-										organiser: 'Some group'
-										location:
-											name: 'Det Akademiske Kvarter'
-											address: 'Strømgaten 6, Bergen, Norge'
-
-									}
-									{
-										title: 'Hello world'
-										source: 'http://test.test'
-										date: new Date().getTime()
-										organiser: 'Some group'
-										location:
-											name: 'Det Akademiske Kvarter'
-											address: 'Strømgaten 6, Bergen, Norge'
-
-									}
-									{
-										title: 'Hello world'
-										source: 'http://test.test'
-										date: new Date().getTime()
-										organiser: 'Some group'
-										location:
-											name: 'Det Akademiske Kvarter'
-											address: 'Strømgaten 6, Bergen, Norge'
-
-									}
-									{
-										title: 'Hello world'
-										source: 'http://test.test'
-										date: new Date().getTime()
-										organiser: 'Some group'
-										location:
-											name: 'Det Akademiske Kvarter'
-											address: 'Strømgaten 6, Bergen, Norge'
-
-									}
-									{
-										title: 'Hello world'
-										source: 'http://test.test'
-										date: new Date().getTime()
-										organiser: 'Some group'
-										location:
-											name: 'Det Akademiske Kvarter'
-											address: 'Strømgaten 6, Bergen, Norge'
-
-									}
-								]
-							}
-							{
-								dateHeader: 'Søndag, 19.03.2015'
-								events: [
-									{
-										title: 'Hello world'
-										source: 'http://test.test'
-										date: new Date().getTime()
-										organiser: 'Some group'
-										location:
-											name: 'Det Akademiske Kvarter'
-											address: 'Strømgaten 6, Bergen, Norge'
-
-									}
-									{
-										title: 'Hello world'
-										source: 'http://test.test'
-										date: new Date().getTime()
-										organiser: 'Some group'
-										location:
-											name: 'Det Akademiske Kvarter'
-											address: 'Strømgaten 6, Bergen, Norge'
-
-									}
-									{
-										title: 'Hello world'
-										source: 'http://test.test'
-										date: new Date().getTime()
-										organiser: 'Some group'
-										location:
-											name: 'Det Akademiske Kvarter'
-											address: 'Strømgaten 6, Bergen, Norge'
-
-									}
-									{
-										title: 'Hello world'
-										source: 'http://test.test'
-										date: new Date().getTime()
-										organiser: 'Some group'
-										location:
-											name: 'Det Akademiske Kvarter'
-											address: 'Strømgaten 6, Bergen, Norge'
-
-									}
-									{
-										title: 'Hello world'
-										source: 'http://test.test'
-										date: new Date().getTime()
-										organiser: 'Some group'
-										location:
-											name: 'Det Akademiske Kvarter'
-											address: 'Strømgaten 6, Bergen, Norge'
-
-									}
-								]
-							}
-						]
+						events: eventData
 
 					response.writeHead(200)
 					response.write(html, "binary")
