@@ -8,7 +8,7 @@ html
 			.wrapper
 				img#logo('src=img/kompiler.png')
 				h1 IT-arrangementer i Bergen
-				form(action='/')
+				form(action='/', method='POST')
 					input.url(type='text', name='url' placeholder='Legg til IT-arrangement med URL')
 					button(type='submit') Add
 					label(for='url') fra facebook, meetup eller eventbrite
