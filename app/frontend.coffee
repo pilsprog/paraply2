@@ -43,7 +43,7 @@ exports.handle = (request, response) ->
 			if fs.existsSync(path.join(filename, 'index.jade'))
 				filename = path.join(filename, 'index.jade')
 			else
-				respond404()
+				respond404(request, response)
 				return
 
 		if filename.indexOf('.jade') isnt -1
