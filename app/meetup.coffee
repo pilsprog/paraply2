@@ -21,7 +21,7 @@ fetching.
 @copyright Kompiler 2015
 ###
 
-muAPIKey = (require '../config').meetup
+muAPIKey = (require '../config/config').meetup
 
 unless muAPIKey
 	throw new Error 'MU_API_KEY environment variable missing'

@@ -1,4 +1,4 @@
-config = (require '../config').eventbrite
+config = (require '../config/config').eventbrite
 eventbrite = (require 'eventbrite')({app_key:config.appKey})
 
 # params = {'city': "Bergen"}

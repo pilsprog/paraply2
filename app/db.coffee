@@ -6,7 +6,7 @@ client.
 @author Snorre Davøen
 ###
 elasticsearch = require 'elasticsearch'
-client = new elasticsearch.Client (require '../config').elasticsearch
+client = new elasticsearch.Client (require '../config/config').elasticsearch
 
 
 # Add ID mapping to index

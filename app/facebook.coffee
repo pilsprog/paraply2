@@ -29,7 +29,7 @@ At the moment only single events that are public can be fetched due to limitatio
 @copyright Kompiler 2015
 ###
 
-config = (require '../config').facebook
+config = (require '../config/config').facebook
 unless config?.appId and config?.secretKey
 	throw new Error('facebook module config missing')
 
