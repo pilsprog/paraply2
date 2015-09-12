@@ -47,7 +47,7 @@ _createIndex = (name) ->
 			else
 
 				console.log "Index already exists"
-	
+
 		(error) ->
 			console.error error)
 
@@ -71,7 +71,7 @@ client.ping
 # @option query [array] events
 # @option query [function] onSuccess
 # @option query [function] onError
-set = (query) ->
+setEvents = (query) ->
 	console.log JSON.stringify query
 	bulkEvents = []
 	for event in query.events
@@ -118,7 +118,7 @@ setGroup = (query) ->
 # @param [object] query
 # @option query [function] onSuccess
 # @option query [function] onError
-get = (query) ->
+getEvents = (query) ->
 	client.search
 		index: 'events'
 		body:
@@ -158,7 +158,7 @@ getGroups = (query) ->
 
 # Export set and setGroup functions
 exports = module.exports =
-	'set': set
+	'setEvents': setEvents
 	'setGroup': setGroup
-	'get': get
+	'getEvents': getEvents
 	'getGroups': getGroups

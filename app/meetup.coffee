@@ -6,7 +6,7 @@ fetching.
 
 @example usage
 	meetup = require 'meetup'
-	
+
 	testEventHandle = () ->
 		meetup.handle
 			url: "http://www.meetup.com/NNUG-Bergen/events/221170619/"
@@ -14,7 +14,7 @@ fetching.
 				console.log "RESULT", result
 			onError: (error) ->
 				console.log error.error
-	
+
 	testEventHandle()
 
 @author Snorre Magnus Davøen
@@ -115,7 +115,7 @@ _handleEvent = (query) ->
 				module: 'meetup'
 		onSuccess: (muEvents) ->
 			event = _parseEvent muEvents[0]
-			db.set
+			db.setEvents
 				events: [event]
 				onSuccess: query.onSuccess
 				onError: query.onError
@@ -138,7 +138,7 @@ _handleGroupEvents = (query) ->
 			events = []
 			for event in muEvents
 				events.push _parseEvent event
-			db.set
+			db.setEvents
 				events: events
 				onSuccess: query.onSuccess
 				onError: query.onError

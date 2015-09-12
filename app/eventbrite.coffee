@@ -1,18 +1,28 @@
+###
+eventbrite is a module that handles getting events from eventbrite.com.
+It supports importation of single events and eventbrite organizations.
+
+@author Torstein Thune
+@author Snorre Magnus Davøen
+@copyright Kompiler 2015
+###
+
 config = (require '../config/config').eventbrite
 eventbrite = (require 'eventbrite')({app_key:config.appKey})
+db = require './db'
 
 # params = {'city': "Bergen"}
 
 # eventbrite.event_search(params, (err, data)->
-#     console.log(err)
-#     console.log(JSON.stringify(data, false, '\t'))
+#		 console.log(err)
+#		 console.log(JSON.stringify(data, false, '\t'))
 # )
 
 # Get ID for an eventbrite event
 # @param [string] url
 # @return id or undefined
 _getEventId = (url) ->
-	id = (new RegExp(/eventbrite\.com\/e\/[A-Za-z0-9-]*-(\d+)+/g)).exec(url)?[1] 
+	id = (new RegExp(/eventbrite\.com\/e\/[A-Za-z0-9-]*-(\d+)+/g)).exec(url)?[1]
 	id ?= undefined
 	return id
 
@@ -20,7 +30,7 @@ _getEventId = (url) ->
 # @param [string] url
 # @return id or undefined
 _getOrganiserId = (url) ->
-	id = (new RegExp(/eventbrite\.com\/o\/[A-Za-z0-9-]*-(\d+)+/g)).exec(url)?[1] 
+	id = (new RegExp(/eventbrite\.com\/o\/[A-Za-z0-9-]*-(\d+)+/g)).exec(url)?[1]
 	id ?= undefined
 	return id
 
@@ -31,28 +41,30 @@ _getOrganiserId = (url) ->
 # @option query [function] onError
 # @private
 _getOrganiserEvents = (query) ->
-	unless query.eventId 
+	unless query.organiserId
 		query.onError
-			error: new Error("No eventId supplied (eventbrite._getOrganiserEvents)")
+			error: new Error("No organiserId supplied (eventbrite._getOrganiserEvents)")
 			module: 'eventbrite'
 	else
-		db.setGroup
+		group = {
 			id: "eventbrite-organiser-#{query.organiserId}"
 			source: query.url
+		}
+		db.setGroup
+			group: group
 			onSuccess: -> # no fucks given
 			onError: query.onError
 
 		eventbrite.organizer_list_events({id: query.organiserId}, (err, res) ->
-
-			now = new Date().getTime()
+			now = new Date()
 			events = []
-
 			for event in res.events
+				event = event.event
 				date = new Date(event.start_date)
-				if date < now
+				if date > now
 					events.push
 						id: "eventbrite-id-#{_getEventId(event.url)}"
-						date: date 
+						date: date
 						source: event.url
 						title: event.title
 						location:
@@ -61,11 +73,11 @@ _getOrganiserEvents = (query) ->
 							lon: event.venue.longitude
 							lat: event.venue.latitude
 
-			db.set 
+			console.log events
+			db.setEvents
 				events: events
 				onSuccess: query.onSuccess
 				onError: query.onError
-
 		)
 
 # Get events for an organiser
@@ -75,11 +87,10 @@ _getOrganiserEvents = (query) ->
 # @option query [function] onError
 # @private
 _getEvent = (query) ->
-	console.log 'eventbrite._getEvent'
 	eventbrite.event_get({id: query.eventId}, (err, data) ->
-		db.set 
+		db.setEvents
 			events: [
-				id: "eventbrite-event-#{eventId}"
+				id: "eventbrite-event-#{query.eventId}"
 				source: data.event.url
 				title: data.event.title
 				date: new Date(data.event.start_date).getTime()
@@ -94,30 +105,17 @@ _getEvent = (query) ->
 	)
 
 exports.handle = (query) ->
-	console.log 'eventbrite.handle'
 	eventId = _getEventId(query.url)
-	console.log eventId
 	organiserId = _getOrganiserId(query.url)
 
 	if eventId
-		console.log "eventId: #{eventId}"
 		query.eventId = eventId
 		_getEvent query
 		#return true
-	
+
 	else if organiserId
-		console.log "organiserId: #{eventId}"
 		query.organiserId = organiserId
-		_getOrganiserId query
+		_getOrganiserEvents query
 		#return true
 
-	return false 
-
-
-
-# console.log _getEventId('http://www.eventbrite.com/e/23-april-2015-kl-1800-first-tuesday-partner-middag-scandic-rnen-hotell-tickets-16629131179?lololol124234')
-# console.log _getOrganiserId 'http://www.eventbrite.com/o/first-tuesday-bergen-311277798?s='
-
-# eventbrite.organizer_list_events({id: 311277798}, (err, res) ->
-# 	console.log res
-# )
+	return false

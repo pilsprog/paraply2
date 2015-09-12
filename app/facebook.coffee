@@ -85,7 +85,7 @@ _getEvent = (query) ->
 					error: res.error
 					module: 'facebook'
 			else
-				db.set 
+				db.setEvents
 					events: [
 						id: _createId(query.url)
 						title: res.name
@@ -123,4 +123,3 @@ exports.handle = (query) ->
 # 			console.log eventObj
 # 		onError: (errorObj) ->
 # 			console.log errorObj
-
