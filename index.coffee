@@ -28,14 +28,14 @@ handleUrl = (url, req, res) ->
 
 	queryObj =
 		url: url
-		onSuccess: -> 
-			res.writeHead(200)
+		onSuccess: ->
+			res.writeHead(302, {'Location': '/'})
 			res.end('Thank you!')
 		onError: ->
 			res.writeHead(400)
 			res.end("Paraplyen klarte ikke å håndtere #{url}. Kun Facebook-arrangementer, Meetup-grupper og -arrangementer og Eventbrite-organiserere og -arrangementer støttes.")
 	console.log frontend
-	
+
 	for module, val of modules
 		console.log module
 		console.log val
@@ -104,6 +104,3 @@ console.log "\n\n\n
 			yyyyyyyyyyyyyyyyys+yyyyyyyyyyyyyyyyyyyyy\n
 			yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\n"['red']
 console.log ' Paraply started @ ' + "http://localhost:#{port}\n\n\n"['cyan']
-
-
-
