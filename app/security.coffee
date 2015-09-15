@@ -8,6 +8,12 @@ It uses the db module to store information about user submissions.
 
 db = require './db'
 
+# Adds a user submission object to database
+# @param [object] query
+# @option query [object] submission
+# @option query [function] onSuccess
+# @option query [function] onError
+# @private
 _addSubmission = (query) ->
 	addSubmissionQuery =
 		submission: query.submission
@@ -15,6 +21,12 @@ _addSubmission = (query) ->
 		onError: query.onError
 	db.setSubmission addSubmissionQuery
 
+# Verifies a user submission, i.e. checks if rate limiting should be applied
+# @param [object] query
+# @option query [object] req object from node httpserver module
+# @option query [function] onSuccess
+# @option query [function] onError
+_addSubmission
 verifySubmission = (query) ->
 	verifySubmissionQuery =
 		ip: query.req.connection.remoteAddress
