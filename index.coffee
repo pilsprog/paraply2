@@ -14,6 +14,7 @@ port = process.argv[2] || 8888 # port to start paraply on
 
 frontend = require './app/frontend'
 api = require './app/api'
+security = require './app/security'
 
 modules = {}
 modules.meetup = require './app/meetup'
@@ -36,11 +37,18 @@ handleUrl = (url, req, res) ->
 			res.end("Paraplyen klarte ikke å håndtere #{url}. Kun Facebook-arrangementer, Meetup-grupper og -arrangementer og Eventbrite-organiserere og -arrangementer støttes.")
 	console.log frontend
 
-	for module, val of modules
-		console.log module
-		console.log val
+	securityQueryObj =
+		req: req
+		onSuccess: ->
+			for module, val of modules
+				console.log module
+				console.log val
+				break if val.handle?(queryObj)
+		onError: ->
+			res.writeHead(403)
+			res.end("Paraplyen ville ikke håndtere #{url}. Du har sendt for mange forespørsler om å sette inn eventer. Vent litt før du prøver igjen.")
 
-		break if val.handle?(queryObj)
+	security.verifySubmission securityQueryObj
 
 
 # Handle post requests (e.g urls for adding events)
@@ -87,14 +95,14 @@ http.createServer(requestHandler).listen(parseInt(port, 10))
 console.log "\n\n\n
 			yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\n
 			yyyyyyyyyyyyyyyyyyy++yyyyyyyyyyyyyyyyyyy\n
-			yyyyyyyyyyyyyyyyyys  syyyyyyyyyyyyyyyyyy\n
-			yyyyyyyyyysssssso+.  .+ossssssyyyyyyyyyy\n
-			yyyyyyy:`         `+/`         `:yyyyyyy\n
+			yyyyyyyyyyyyyyyyyys	syyyyyyyyyyyyyyyyyy\n
+			yyyyyyyyyysssssso+.	.+ossssssyyyyyyyyyy\n
+			yyyyyyy:`				 `+/`				 `:yyyyyyy\n
 			yyyyyy+ `/ooooooosyyyysooooooo/` +yyyyyy\n
 			yyyyyy: :yyyyyyyyys--oyyyyyyyyy: :yyyyyy\n
-			yyyyyyo+syyyyyyyyyo  +yyyyyyyyys+oyyyyyy\n
-			yyyyyyyyyyyyyyyyyyo  +yyyyyyyyyyyyyyyyyy\n
-			yyyyyyyyyyyyyyyyyyo  +yyyyyyyyyyyyyyyyyy\n
+			yyyyyyo+syyyyyyyyyo	+yyyyyyyyys+oyyyyyy\n
+			yyyyyyyyyyyyyyyyyyo	+yyyyyyyyyyyyyyyyyy\n
+			yyyyyyyyyyyyyyyyyyo	+yyyyyyyyyyyyyyyyyy\n
 			yyyyyyyyyyyyyyyyyys--oyyyyyyyyyyyyyyyyyy\n
 			yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy\n
 			yyyyyyyyyyyyyyyyyyy/:+yyyyyyyyyyyyyyyyyy\n

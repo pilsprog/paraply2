@@ -61,6 +61,7 @@ client.ping
 	(body) ->
 		_createIndex 'events'
 		_createIndex 'groups'
+		_createIndex 'submissions'
 	(error) ->
 		console.error 'Elasticsearch cluster is down'
 		throw new Error 'Elastic search cluster is down')
@@ -72,7 +73,6 @@ client.ping
 # @option query [function] onSuccess
 # @option query [function] onError
 setEvents = (query) ->
-	console.log JSON.stringify query
 	bulkEvents = []
 	for event in query.events
 		bulkEvents.push
@@ -104,6 +104,25 @@ setGroup = (query) ->
 		'type': 'group'
 		'id': query.group.id
 		'body': query.group
+	.then(
+		(result) ->
+			query.onSuccess result
+		(error) ->
+			query.onError
+				error: error
+				module: 'db')
+
+
+# Add user submission info to ElasticSearch submissions index
+# @param [object] query
+# @option query [object] submission
+# @option query [function] onSuccess
+# @option query [function] onError
+setSubmission = (query) ->
+	client.index
+		'index': 'submissions',
+		'type': 'submission'
+		'body': query.submission
 	.then(
 		(result) ->
 			query.onSuccess result
@@ -155,10 +174,31 @@ getGroups = (query) ->
 				error: error
 				module: 'db')
 
+# Get the submission count of a user
+# @oaram [object] query
+# @option query [string] ipAddress
+# @option query [Date] dateFrom
+# @option query [function] onSuccess
+# @option query [function] onError
+getSubmissionCount = (query) ->
+	client.search
+		index: 'submissions'
+		body:
+			query: filtered: filter: range: date: gt: 'now-3m'
+			sort: date: order: "asc"
+	.then(
+		(esSubmissions) ->
+			query.onSuccess esSubmissions.hits.hits.length
+		(error) ->
+			query.onError
+				error: error
+				module: 'db')
 
 # Export set and setGroup functions
 exports = module.exports =
 	'setEvents': setEvents
 	'setGroup': setGroup
+	'setSubmission': setSubmission
 	'getEvents': getEvents
 	'getGroups': getGroups
+	'getSubmissionCount': getSubmissionCount
