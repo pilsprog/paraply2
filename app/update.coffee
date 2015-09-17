@@ -21,7 +21,7 @@ updateGroups = () ->
 						onError: (error) -> console.error error
 
 					break if val.handle?(queryObj)
-			
+
 		onError: (error) ->
 			console.error error
 
@@ -38,7 +38,7 @@ updateEvents = () ->
 						onError: (error) -> console.error error
 
 					break if val.handle?(queryObj)
-			
+
 		onError: (error) ->
 			console.error error
 

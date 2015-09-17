@@ -72,8 +72,6 @@ _getOrganiserEvents = (query) ->
 							name: event.venue.name
 							lon: event.venue.longitude
 							lat: event.venue.latitude
-
-			console.log events
 			db.setEvents
 				events: events
 				onSuccess: query.onSuccess
