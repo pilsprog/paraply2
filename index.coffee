@@ -25,7 +25,6 @@ modules.facebook = require './app/facebook'
 
 handleUrl = (url, req, res) ->
 	# check if url is a valid url
-	console.log 'handleUrl'
 
 	queryObj =
 		url: url
@@ -35,14 +34,11 @@ handleUrl = (url, req, res) ->
 		onError: ->
 			res.writeHead(400)
 			res.end("Paraplyen klarte ikke å håndtere #{url}. Kun Facebook-arrangementer, Meetup-grupper og -arrangementer og Eventbrite-organiserere og -arrangementer støttes.")
-	console.log frontend
 
 	securityQueryObj =
 		req: req
 		onSuccess: ->
 			for module, val of modules
-				console.log module
-				console.log val
 				break if val.handle?(queryObj)
 		onError: ->
 			res.writeHead(403)
@@ -64,13 +60,7 @@ postHandler = (req, res) ->
 
 	req.addListener('end', (chunk) =>
 		req.body += chunk if chunk
-
-		console.log req.body
-
 		url = decodeURIComponent(req.body).replace('url=', '')
-
-
-		console.log url
 		handleUrl(url, req, res)
 	)
 

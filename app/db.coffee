@@ -5,6 +5,7 @@ client.
 
 @author Snorre Davøen
 ###
+geo = require './geo'
 elasticsearch = require 'elasticsearch'
 client = new elasticsearch.Client (require '../config/config').elasticsearch
 
@@ -73,24 +74,29 @@ client.ping
 # @option query [function] onSuccess
 # @option query [function] onError
 setEvents = (query) ->
-	bulkEvents = []
-	for event in query.events
-		bulkEvents.push
-			'index':
-				'_index': 'events'
-				'_type': 'event'
-				'_id': event.id
-		bulkEvents.push event
+	verifyGeoQuery =
+		events: query.events
+		onError: query.onError
+		onSuccess: (events) ->
+			bulkEvents = []
+			for event in events
+				bulkEvents.push
+					'index':
+						'_index': 'events'
+						'_type': 'event'
+						'_id': event.id
+				bulkEvents.push event
+			client.bulk
+				'body': bulkEvents
+			.then(
+				(result) ->
+					query.onSuccess result
+				(error) ->
+					query.onError
+						error: error
+						module: 'db')
 
-	client.bulk
-		'body': bulkEvents
-	.then(
-		(result) ->
-			query.onSuccess result
-		(error) ->
-			query.onError
-				error: error
-				module: 'db')
+	geo.verifyGeographicPositions verifyGeoQuery
 
 
 # Add events to ElasticSearch event index
