@@ -5,7 +5,7 @@ It uses the db module to store information about user submissions.
 @author Snorre Magnus Davøen
 @copyright Kompiler 2015
 ###
-
+config = (require '../config/config').security
 db = require './db'
 
 # Adds a user submission object to database
@@ -26,7 +26,6 @@ _addSubmission = (query) ->
 # @option query [object] req object from node httpserver module
 # @option query [function] onSuccess
 # @option query [function] onError
-_addSubmission
 verifySubmission = (query) ->
 	verifySubmissionQuery =
 		ip: query.req.connection.remoteAddress

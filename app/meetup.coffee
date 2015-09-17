@@ -56,7 +56,6 @@ _getEvents = (eventQuery) ->
 			if error
 				eventQuery.onError error
 			else
-				console.log 'WE HAVE FEEDBACK\n', events
 				eventQuery.onSuccess events.results)
 
 
@@ -72,7 +71,6 @@ _getGroups = (groupQuery) ->
 			if error
 				groupQuery.onError error
 			else
-				console.log '\n\n\nWE HAVE A GROUP\n', groups, '\n\n\n'
 				groupQuery.onSuccess groups.results[0]
 
 

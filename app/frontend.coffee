@@ -49,7 +49,6 @@ exports.handle = (request, response) ->
 		if filename.indexOf('.jade') isnt -1
 			try
 				onSuccess = (data) ->
-					console.log data
 					events = _.groupBy data, (elem) ->
 						return moment(elem.date).format('YYYY-MM-DD')
 
@@ -57,7 +56,6 @@ exports.handle = (request, response) ->
 					for key,val of events
 						eventData.push { dateHeader: moment(key).format('dddd, Do MMMM, YYYY'), events: val}
 
-					console.log eventData
 					html = jade.renderFile filename,
 						pretty: true
 						compileDebug: true
@@ -74,9 +72,6 @@ exports.handle = (request, response) ->
 				db.getEvents
 					onSuccess: onSuccess
 					onError: (error) ->
-						console.log '\n\n\n\n'
-						console.log JSON.stringify error, false, '\t'
-						console.log '\n\n\n'
 						html = jade.renderFile filename,
 							pretty: true
 							compileDebug: true
