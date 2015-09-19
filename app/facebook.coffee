@@ -33,14 +33,10 @@ config = (require '../config/config').facebook
 unless config?.appId and config?.secretKey
 	throw new Error('facebook module config missing')
 
-fb = require 'fb'
+graph = require 'fbgraph'
 db = require './db'
 
-fb.options
-	appId: config.appId
-	secretKey: config.secretKey
-
-fb.setAccessToken("#{config.appId}|#{config.secretKey}")
+graph.setAccessToken "#{config.appId}|#{config.secretKey}"
 
 # Get event id
 # @param [string] url
@@ -79,8 +75,8 @@ _getEvent = (query) ->
 			error: new Error("No eventId supplied (facebook._getEvent)")
 			module: 'facebook'
 	else
-		fb.api query.eventId, {}, (res) ->
-			if not res or res.error
+		graph.get query.eventId, (err, res) ->
+			if err
 				query.onError
 					error: res.error
 					module: 'facebook'
@@ -93,10 +89,10 @@ _getEvent = (query) ->
 						source: query.url
 						date: new Date(res.start_time)
 						location: {
-							address: ''
-							name: ''
-							lon: 0
-							lat: 0
+							address: res.venue?.street or ''
+							name: res.location or ''
+							lon: res.venue?.longitude or 0
+							lat: res.venue?.latitude or 0
 						}
 					]
 					onSuccess: query.onSuccess

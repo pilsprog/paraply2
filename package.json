@@ -30,7 +30,7 @@
     "colors": "^1.0.3",
     "elasticsearch": "^8.2.0",
     "eventbrite": "^0.1.6",
-    "fb": "^0.7.0",
+    "fbgraph": "^1.1.0",
     "geolib": "^2.0.18",
     "jade": "^1.9.2",
     "lodash": "^3.10.0",
