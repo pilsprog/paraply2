@@ -28,7 +28,7 @@
     "async": "^1.4.2",
     "coffee-script": "1.9.3",
     "colors": "^1.0.3",
-    "elasticsearch": "^4.0.2",
+    "elasticsearch": "^8.2.0",
     "eventbrite": "^0.1.6",
     "fb": "^0.7.0",
     "geolib": "^2.0.18",
