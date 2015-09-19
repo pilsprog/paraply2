@@ -28,6 +28,7 @@
     "async": "^1.4.2",
     "coffee-script": "1.9.3",
     "colors": "^1.0.3",
+    "cron": "^1.0.9",
     "elasticsearch": "^8.2.0",
     "eventbrite": "^0.1.6",
     "fbgraph": "^1.1.0",
