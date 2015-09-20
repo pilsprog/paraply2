@@ -1,0 +1,22 @@
+# Facebook config
+exports.facebook =
+	appId: ${FACEBOOK_APP_ID}
+	secretKey: "${FACEBOOK_SECRET_KEY}"
+
+# Meetup config
+exports.meetup = "${MEETUP_KEY}"
+
+#Eventbrite config
+exports.eventbrite =
+	appKey: "${EVENTBRITE_APP_KEY}"
+
+exports.elasticsearch =
+	host: "${ELASTICSEARCH_HOST_PORT}"
+	log: 'error'
+	apiVersion: '1.5'
+
+exports.geo =
+	center: # Bergen City Center
+		lat: ${GEO_CENTER_LAT}
+		lon: ${GEO_CENTER_LON}
+	maxDistKilometers: ${GEO_MAX_DIST_KILOMETERS}

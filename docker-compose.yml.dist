@@ -1,0 +1,18 @@
+elasticsearch:
+  image: elasticsearch:latest
+
+paraply2:
+  image: pilsprog/paraply2
+  ports:
+    - 8888:8888
+  links:
+    - elasticsearch
+  environment:
+    - FACEBOOK_APP_ID=
+    - FACEBOOK_SECRET_KEY=
+    - MEETUP_KEY=
+    - EVENTBRITE_APP_KEY=
+    - ELASTICSEARCH_HOST_PORT=elasticsearch:9200
+    - GEO_CENTER_LAT=0.000000000000000
+    - GEO_CENTER_LON=0.000000000000000
+    - GEO_MAX_DIST_KILOMETERS=100

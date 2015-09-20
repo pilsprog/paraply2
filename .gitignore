@@ -31,3 +31,4 @@ bower_components
 config.coffee
 config/config.coffee
 doc
+docker-compose.yml

@@ -8,7 +8,7 @@ client.
 geo = require './geo'
 elasticsearch = require 'elasticsearch'
 client = new elasticsearch.Client (require '../config/config').elasticsearch
-
+connectionRetries = 0
 
 # Add ID mapping to index
 # @param [string] name of index
@@ -55,17 +55,23 @@ _createIndex = (name) ->
 
 
 # Make sure elastic search is running
-client.ping
-	requestTimeout: Infinity,
-	hello: 'elasticsearch!'
-.then(
-	(body) ->
-		_createIndex 'events'
-		_createIndex 'groups'
-		_createIndex 'submissions'
-	(error) ->
-		console.error 'Elasticsearch cluster is down'
-		throw new Error 'Elastic search cluster is down')
+pingClient = ->
+	client.ping
+		requestTimeout: Infinity,
+		hello: 'elasticsearch!'
+	.then(
+		(body) ->
+			_createIndex 'events'
+			_createIndex 'groups'
+			_createIndex 'submissions'
+		(error) ->
+			if connectionRetries < 10
+				console.error 'Elasticsearch cluster is down, try again'
+				setTimeout (-> pingClient()), 1000
+			else
+				console.error 'Failed to achieve contact with elastic search'
+				throw new Error 'Elastic search cluster is down')
+pingClient()
 
 
 # Add events to ElasticSearch event index
