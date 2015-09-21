@@ -1,7 +1,7 @@
 # Facebook config
 exports.facebook =
-	appId: null
-	secretKey: null
+	appId: null # appID is number
+	secretKey: null #secretKey is string
 
 # Meetup config
 exports.meetup = null # API key as string
@@ -12,7 +12,7 @@ exports.eventbrite =
 
 exports.elasticsearch =
 	host: 'localhost:9200'
-	log: 'trace'
+	log: 'error'
 	apiVersion: '1.5'
 
 exports.geo =
