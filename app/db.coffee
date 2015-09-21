@@ -67,7 +67,7 @@ pingClient = ->
 		(error) ->
 			if connectionRetries < 10
 				console.error 'Elasticsearch cluster is down, try again'
-				setTimeout (-> pingClient()), 1000
+				setTimeout (-> pingClient()), 3000
 			else
 				console.error 'Failed to achieve contact with elastic search'
 				throw new Error 'Elastic search cluster is down')
