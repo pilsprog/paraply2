@@ -11,8 +11,6 @@ sed 's,${GEO_CENTER_LON},'"${GEO_CENTER_LON}"',g' -i /usr/src/app/config/config.
 sed 's,${GEO_CENTER_LON},'"${GEO_CENTER_LON}"',g' -i /usr/src/app/config/config.tmpl
 sed 's,${GEO_MAX_DIST_KILOMETERS},'"${GEO_MAX_DIST_KILOMETERS}"',g' -i /usr/src/app/config/config.tmpl
 
-mv /usr/src/app/config/config.tmpl /usr/src/app/config/config.coffee
-
-cat /usr/src/app/config/config.coffee
+cp /usr/src/app/config/config.tmpl /usr/src/app/config/config.coffee
 
 exec "$@"
