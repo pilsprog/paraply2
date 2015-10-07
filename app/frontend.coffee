@@ -23,10 +23,10 @@ respond404 = (req, res) ->
 respond500 = (req, res, err) ->
 	res.writeHead(500, {"Content-Type": "text/plain"})
 	res.write('HTTP 500, Paraplyen lekker. \n\n')
-	res.write('Viss du ser ein av kodemonkeyene bak prosjektet \n')
+	res.write('Hvis du ser en av kodeapene bak prosjektet \n')
 	res.write('så kan du gi dem denne feilmeldingen: \n')
 	res.write(new Buffer(err.message).toString('base64'))
-	res.write("\n takk for hjelpen. Ha ein fin dag. :)")
+	res.write("\n takk for hjelpen. Ha en fin dag.")
 	res.end()
 
 exports.handle = (request, response) ->
