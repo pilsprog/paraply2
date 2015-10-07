@@ -112,6 +112,10 @@ header label {
 	font-size: 15px;
 }
 
+.error-message {
+	min-height: 500px;
+}
+
 .right {
 	float: right;
 }

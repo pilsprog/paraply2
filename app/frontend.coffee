@@ -22,7 +22,11 @@ respond404 = (req, res) ->
 
 respond500 = (req, res, err) ->
 	res.writeHead(500, {"Content-Type": "text/plain"})
-	res.write('HTTP 500, Paraplyen lekker.')
+	res.write('HTTP 500, Paraplyen lekker. \n\n')
+	res.write('Hvis du ser en av kodeapene bak prosjektet \n')
+	res.write('så kan du gi dem denne feilmeldingen: \n')
+	res.write(new Buffer(err.message).toString('base64'))
+	res.write("\n takk for hjelpen. Ha en fin dag.")
 	res.end()
 
 exports.handle = (request, response) ->
@@ -72,13 +76,14 @@ exports.handle = (request, response) ->
 				db.getEvents
 					onSuccess: onSuccess
 					onError: (error) ->
-						html = jade.renderFile filename,
+						html = jade.renderFile 'error.jade',
 							pretty: true
 							compileDebug: true
 							getHourMinutes: (timestamp) ->
 								date = new Date(timestamp)
 								return "#{('0'+date.getHours()).slice(-2)}:#{('0' + date.getMinutes()).slice(-2)}"
 							events: []
+							error: error
 
 						response.writeHead(200)
 						response.write(html, "binary")
